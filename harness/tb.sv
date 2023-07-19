@@ -2,11 +2,20 @@
 
 import uvm_pkg::*;
 `include "my_if.sv"
+`include "dut_harness.sv"
 `include "my_transaction.sv"
+`include "my_sequencer.sv"
 `include "my_driver.sv"
+`include "my_monitor.sv"
+`include "my_agent.sv"
+`include "my_model.sv"
+`include "my_scoreboard.sv"
 `include "my_env.sv"
+`include "base_test.sv"
+`include "my_case0.sv"
+`include "my_case1.sv"
 
-module top_tb;
+module tb;
 
 reg clk;
 reg rst_n;
@@ -18,7 +27,7 @@ wire tx_en;
 my_if input_if(clk, rst_n);
 my_if output_if(clk, rst_n);
 
-dut my_dut(
+dut u_dut(
     .clk   (clk             ),
     .rst_n (rst_n           ),
     .rxd   (input_if.data   ),
@@ -26,6 +35,7 @@ dut my_dut(
     .txd   (output_if.data  ),
     .tx_en (output_if.valid )
 );
+
 
 initial begin
    clk = 0;
@@ -41,25 +51,22 @@ initial begin
 end
 
 initial begin
-    $fsdbDumpfile("dump.fsdb");
-    $fsdbDumpvars(0, top_tb);
+    $fsdbDumpfile("tb.fsdb");
+    $fsdbDumpvars(0, tb);
     //$dumpfile("dump.vcd");
     //$dumpvars(0);
     //$dumpflush;
     //$shm_open("dump.shm"); // The SHM Database
     //$shm_probe("ACM"); // The SHM Database
 end
-
 initial begin
-    // create root
-    // "my_env" is class type 
-    // "uvm_test_top" is instance class name
-    run_test("my_env");
+    run_test();
 end
 
 initial begin
-   uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.drv", "vif", input_if);
+    u_dut.harness.set_vifs("*.env.*");
+//   uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.env.i_agt.drv", "vif", input_if);
+//   uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.env.i_agt.mon", "vif", input_if);
+//   uvm_config_db#(virtual my_if)::set(null, "uvm_test_top.env.o_agt.mon", "vif", output_if);
 end
-
 endmodule
-

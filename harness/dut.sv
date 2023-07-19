@@ -25,3 +25,7 @@ always @(posedge clk) begin
    end
 end
 endmodule
+
+//bind dut my_if rx_if (.data(rxd), .valid(rx_dv)); // bind module to virtual interface
+//bind dut my_if tx_if (.data(txd), .valid(tx_en)); // bind module to virtual interface
+bind dut dut_harness harness (); // bind the virtual interface to the module
