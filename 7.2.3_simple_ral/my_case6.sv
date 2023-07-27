@@ -68,49 +68,59 @@ class case0_bus_seq extends uvm_sequence #(bus_transaction);
     `uvm_object_utils(case0_bus_seq)
 endclass
 
-//class case0_bus_seq extends uvm_sequence;
-//
-//   `uvm_object_utils(case0_bus_seq)
-//   `uvm_declare_p_sequencer(my_vsqr)
-//   
-//   function  new(string name= "case0_bus_seq");
-//      super.new(name);
-//   endfunction 
-//   
-//   virtual task body();
-//      uvm_status_e   status;
-//      uvm_reg_data_t value;
-//      p_sequencer.p_rm.invert.read(status, value, UVM_FRONTDOOR);
-//      `uvm_info("case0_bus_seq", $sformatf("invert's initial value is %0h", value), UVM_LOW)
-//      p_sequencer.p_rm.invert.write(status, 1, UVM_FRONTDOOR);
-//      p_sequencer.p_rm.invert.read(status, value, UVM_FRONTDOOR);
-//      `uvm_info("case0_bus_seq", $sformatf("after set, invert's value is %0h", value), UVM_LOW)
-//   endtask
-//
-//endclass
+class case0_ral extends uvm_sequence;
+    `uvm_object_utils(case0_ral)
+    `uvm_declare_p_sequencer(my_vsqr)
+    
+    function  new(string name= "case0_bus_seq");
+        super.new(name);
+    endfunction 
+    
+    virtual task body();
+        uvm_status_e status;
+        uvm_reg_data_t value;
+
+        // read
+        p_sequencer.p_rm.invert.read(status, value, UVM_FRONTDOOR);
+        `uvm_info("case0_bus_seq", $sformatf("invert's initial value is %0h", value), UVM_LOW)
+
+        // write
+        p_sequencer.p_rm.invert.write(status, 1, UVM_FRONTDOOR);
+
+        // read
+        p_sequencer.p_rm.invert.read(status, value, UVM_FRONTDOOR);
+        `uvm_info("case0_bus_seq", $sformatf("after set, invert's value is %0h", value), UVM_LOW)
+    endtask
+
+endclass
 
 class case0_vseq extends uvm_sequence;
-   `uvm_object_utils(case0_vseq)
-   `uvm_declare_p_sequencer(my_vsqr) 
-   function new(string name = "case0_vseq");
-      super.new(name);
-   endfunction
+    `uvm_object_utils(case0_vseq)
+    `uvm_declare_p_sequencer(my_vsqr) 
+    function new(string name = "case0_vseq");
+        super.new(name);
+    endfunction
 
-   virtual task body();
-      case0_sequence  dseq;
-      case0_bus_seq   bseq;
-      if(starting_phase != null) 
-         starting_phase.raise_objection(this);
+    virtual task body();
+        case0_sequence  dseq;
+        case0_bus_seq   bseq;
+        case0_ral       rseq;
 
-      `uvm_info(get_full_name(), "in vseq body", UVM_LOW)
-      bseq = case0_bus_seq::type_id::create("bseq");
-      dseq = case0_sequence::type_id::create("dseq");
-      bseq.start(p_sequencer.p_bus_sqr);
-      dseq.start(p_sequencer.p_my_sqr);
+        if(starting_phase != null) 
+            starting_phase.raise_objection(this);
 
-      if(starting_phase != null) 
-         starting_phase.drop_objection(this);
-   endtask
+        `uvm_info(get_full_name(), "in vseq body", UVM_LOW)
+        bseq = case0_bus_seq::type_id::create("bseq");
+        rseq = case0_ral::type_id::create("rseq");
+        dseq = case0_sequence::type_id::create("dseq");
+
+        bseq.start(p_sequencer.p_bus_sqr);
+        rseq.start(p_sequencer);
+        dseq.start(p_sequencer.p_my_sqr);
+
+        if(starting_phase != null) 
+            starting_phase.drop_objection(this);
+    endtask
 endclass
 
 class my_case6 extends base_test;

@@ -28,7 +28,6 @@ VLOG_CONF = -sverilog \
 SIM_CONF =  -l run.log \
 			-R \
 			+fsdb+autoflush\
-			-gui \
 			+UVM_TESTNAME=my_case1 \
 			+UVM_VERDI_TRACE="UVM_AWARE+RAL+HIER+COMPWAVE" \
 			+UVM_TR_RECORD \

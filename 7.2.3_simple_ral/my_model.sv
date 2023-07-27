@@ -31,38 +31,29 @@ function void my_model::invert_tr(my_transaction tr);
     tr.ether_type = tr.ether_type ^ 16'hFFFF;
     tr.crc = tr.crc ^ 32'hFFFF_FFFF;
     for(int i = 0; i < tr.pload.size; i++)
-      tr.pload[i] = tr.pload[i] ^ 8'hFF;
+        tr.pload[i] = tr.pload[i] ^ 8'hFF;
 endfunction
 
-//task my_model::main_phase(uvm_phase phase);
-//    my_transaction tr;
-//    my_transaction new_tr;
-//    super.main_phase(phase);
-//    while(1) begin
-//        port.get(tr);
-//        new_tr = new("new_tr");
-//        new_tr.copy(tr);
-//        `uvm_info("my_model", "get one transaction, copy and print it:", UVM_LOW)
-//        new_tr.print();
-//        ap.write(new_tr);
-//    end
-//endtask
 task my_model::main_phase(uvm_phase phase);
-   my_transaction tr;
-   my_transaction new_tr;
-   uvm_status_e status;
-   uvm_reg_data_t value;
-   super.main_phase(phase);
-   p_rm.invert.read(status, value, UVM_FRONTDOOR);
-   while(1) begin
-      port.get(tr);
-      new_tr = new("new_tr");
-      new_tr.copy(tr);
-      //`uvm_info("my_model", "get one transaction, copy and print it:", UVM_LOW)
-      //new_tr.print();
-      if(value)
-         invert_tr(new_tr);
-      ap.write(new_tr);
-   end
+    my_transaction tr;
+    my_transaction new_tr;
+    uvm_status_e status;
+    uvm_reg_data_t value;
+    super.main_phase(phase);
+
+    while(value == 'd0) begin
+        p_rm.invert.read(status, value, UVM_FRONTDOOR);
+        `uvm_info(get_full_name(), $sformatf("after set, invert's value is %0h", value), UVM_LOW)
+    end
+
+    while(1) begin
+        port.get(tr);
+        new_tr = new("new_tr");
+        new_tr.copy(tr);
+        if(value)
+            invert_tr(new_tr);
+        ap.write(new_tr);
+    end
+
 endtask
 `endif
