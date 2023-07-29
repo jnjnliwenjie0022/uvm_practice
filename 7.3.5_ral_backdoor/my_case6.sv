@@ -81,15 +81,60 @@ class case0_ral extends uvm_sequence;
         uvm_reg_data_t value;
 
         // read
-        //p_sequencer.p_rm.invert.read(status, value, UVM_FRONTDOOR);
-        //`uvm_info("case0_bus_seq", $sformatf("invert's initial value is %0h", value), UVM_LOW)
+        p_sequencer.p_rm.invert.read(status, value, UVM_FRONTDOOR);
+        `uvm_info("case0_bus_seq", $sformatf("invert's initial value is %0h", value), UVM_LOW)
 
         // write
         p_sequencer.p_rm.invert.write(status, 1, UVM_FRONTDOOR);
 
         // read
-        //p_sequencer.p_rm.invert.read(status, value, UVM_FRONTDOOR);
-        //`uvm_info("case0_bus_seq", $sformatf("after set, invert's value is %0h", value), UVM_LOW)
+        p_sequencer.p_rm.invert.read(status, value, UVM_FRONTDOOR);
+        `uvm_info("case0_bus_seq", $sformatf("after set, invert's value is %0h", value), UVM_LOW)
+    endtask
+
+endclass
+
+class case0_cfg_vseq extends uvm_sequence;
+    `uvm_object_utils(case0_cfg_vseq)
+    `uvm_declare_p_sequencer(my_vsqr)
+
+    function new(string name = "case0_cfg_vseq");
+       super.new(name);
+    endfunction 
+
+    virtual task body();
+        uvm_status_e   status;
+        uvm_reg_data_t value;
+        bit [31:0] counter;
+        if (starting_phase != null) 
+            starting_phase.raise_objection(this);
+        p_sequencer.p_rm.invert.read(status, value, UVM_FRONTDOOR);
+        `uvm_info("case0_cfg_vseq", $sformatf("invert's initial value is %0h", value), UVM_LOW)
+        p_sequencer.p_rm.invert.write(status, 1, UVM_FRONTDOOR);
+        p_sequencer.p_rm.invert.read(status, value, UVM_FRONTDOOR);
+        `uvm_info("case0_cfg_vseq", $sformatf("after set, invert's value is %0h", value), UVM_LOW)
+        p_sequencer.p_rm.counter_low.read(status, value, UVM_FRONTDOOR);
+        counter[15:0] = value[15:0];
+        p_sequencer.p_rm.counter_high.read(status, value, UVM_FRONTDOOR);
+        counter[31:16] = value[15:0];
+        `uvm_info("case0_cfg_vseq", $sformatf("counter's initial value(FRONTDOOR) is %0h", counter), UVM_LOW)
+        //p_sequencer.p_rm.counter_low.poke(status, 16'hFFFD);
+        // add
+        p_sequencer.p_rm.counter_low.write(status, 1, UVM_FRONTDOOR);
+        p_sequencer.p_rm.counter_high.write(status, 1, UVM_FRONTDOOR);
+        //
+        p_sequencer.p_rm.counter_low.read(status, value, UVM_FRONTDOOR);
+        counter[15:0] = value[15:0];
+        p_sequencer.p_rm.counter_high.read(status, value, UVM_FRONTDOOR);
+        counter[31:16] = value[15:0];
+        `uvm_info("case0_cfg_vseq", $sformatf("after poke, counter's value(FRONTDOOR) is %0h", counter), UVM_LOW)
+        p_sequencer.p_rm.counter_low.peek(status, value);
+        counter[15:0] = value[15:0];
+        p_sequencer.p_rm.counter_high.peek(status, value);
+        counter[31:16] = value[15:0];
+        `uvm_info("case0_cfg_vseq", $sformatf("after poke, counter's value(BACKDOOR) is %0h", counter), UVM_LOW)
+        if (starting_phase != null) 
+            starting_phase.drop_objection(this);
     endtask
 
 endclass
@@ -105,18 +150,24 @@ class case0_vseq extends uvm_sequence;
         case0_sequence  dseq;
         case0_bus_seq   bseq;
         case0_ral       rseq;
+        case0_cfg_vseq  cseq;
 
         if(starting_phase != null) 
             starting_phase.raise_objection(this);
 
         `uvm_info(get_full_name(), "in vseq body", UVM_LOW)
+        #1000;
+        cseq = case0_cfg_vseq::type_id::create("cseq");
+        cseq.start(p_sequencer);
+
+        #10000;
         //bseq = case0_bus_seq::type_id::create("bseq");
-        rseq = case0_ral::type_id::create("rseq");
-        //dseq = case0_sequence::type_id::create("dseq");
+        //rseq = case0_ral::type_id::create("rseq");
+        dseq = case0_sequence::type_id::create("dseq");
 
         //bseq.start(p_sequencer.p_bus_sqr);
-        rseq.start(p_sequencer);
-        //dseq.start(p_sequencer.p_my_sqr);
+        //rseq.start(p_sequencer);
+        dseq.start(p_sequencer.p_my_sqr);
 
         if(starting_phase != null) 
             starting_phase.drop_objection(this);

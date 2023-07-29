@@ -12,9 +12,16 @@ input          rx_dv;
 output [7:0]   txd;
 output         tx_en;
 
+reg [31:0] counter;
+wire [31:0] counter_nx;
 reg[7:0] txd;
 reg tx_en;
 reg invert;
+
+always @ (posedge clk) begin
+    counter <= counter_nx;
+end
+assign counter_nx = counter;
 
 always @(posedge clk) begin
    if(!rst_n) begin

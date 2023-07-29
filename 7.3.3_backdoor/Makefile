@@ -27,13 +27,22 @@ VLOG_CONF = -sverilog \
 
 SIM_CONF =  -l run.log \
 			+fsdb+autoflush\
-			-gui \
 			+UVM_TESTNAME=my_case6 \
 			+UVM_VERDI_TRACE="UVM_AWARE+RAL+HIER+COMPWAVE" \
 			+UVM_TR_RECORD \
 			+UVM_LOG_RECORD \
 			+verbose=1 \
 			+ntb_random_seed=244
+
+SIM_CONF_WAVE =  -l run.log \
+				 +fsdb+autoflush\
+				 -gui \
+				 +UVM_TESTNAME=my_case6 \
+				 +UVM_VERDI_TRACE="UVM_AWARE+RAL+HIER+COMPWAVE" \
+				 +UVM_TR_RECORD \
+				 +UVM_LOG_RECORD \
+				 +verbose=1 \
+				 +ntb_random_seed=244
 
 TMPFILE = simv.* \
 	*.log *.vpd *.key *.conf *.rc *.fsdb* *.dat *.h \
@@ -42,6 +51,7 @@ TMPFILE = simv.* \
 	.inter.vpd.uvm \
 	.restartSimSession.tcl.old \
 	*.log \
+	.synopsys_dve_rebuild.tcl \
 	vlog 01 02
 
 RM = rm -rf
@@ -51,7 +61,10 @@ VERDI_CONF = -sv \
 			 -nologo
 
 all: comp sim
+wave: comp sim_wave
 
+sim_wave:
+	$(SIM) $(SIM_CONF_WAVE)
 comp:
 	$(VLOG) $(SRC) $(VLOG_CONF)
 sim:
