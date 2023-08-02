@@ -167,6 +167,55 @@ class register_file_b extends uvm_reg_block;
 
 endclass
 //}}}
+//{{{ uvm_reg reg_multifield
+class register_multifield extends uvm_reg;
+    `uvm_object_utils(register_multifield)
+
+    function new(input string name = "register_multifield");
+        super.new(name, 16,   UVM_NO_COVERAGE);
+    endfunction
+
+    rand uvm_reg_field fieldA;
+    rand uvm_reg_field fieldB;
+    rand uvm_reg_field fieldC;
+    virtual function void build();
+        fieldA = uvm_reg_field::type_id::create("fieldA");
+        fieldB = uvm_reg_field::type_id::create("fieldB");
+        fieldC = uvm_reg_field::type_id::create("fieldC");
+        fieldA.configure(this, 2, 0, "RW", 1, 0, 1, 1, 0);
+        fieldB.configure(this, 3, 2, "RW", 1, 0, 1, 1, 0);
+        fieldC.configure(this, 4, 5, "RW", 1, 0, 1, 1, 0);
+    endfunction
+
+endclass
+//}}}
+//{{{ uvm_reg_block reg_c
+class register_file_c extends uvm_reg_block;
+    `uvm_object_utils(register_file_c)
+
+    function new(input string name = "register_file_c");
+        super.new(name, UVM_NO_COVERAGE);
+    endfunction 
+
+    rand register_multifield reg_multifield;
+
+    virtual function void build();
+        default_map = create_map("default_map", 0, 2, UVM_BIG_ENDIAN, 0);
+
+        reg_multifield = register_multifield::type_id::create("reg_multifield", , get_full_name());
+        reg_multifield.configure(this, null, "");
+        reg_multifield.build();
+
+        reg_multifield.add_hdl_path_slice("fieldA", 0, 2);
+        reg_multifield.add_hdl_path_slice("fieldB", 2, 3);
+        reg_multifield.add_hdl_path_slice("fieldC", 5, 4);
+
+        default_map.add_reg(reg_multifield, 'h0, "RW");
+    endfunction
+
+endclass
+
+//}}}
 //{{{ reg_model 
 class reg_model extends uvm_reg_block;
     `uvm_object_utils(reg_model)
@@ -180,6 +229,7 @@ class reg_model extends uvm_reg_block;
     rand reg_block_counter_low  blk_counter_low;
     rand register_file_a        regfile_a;
     rand register_file_b        regfile_b;
+    rand register_file_c        regfile_c;
 
     virtual function void build();
         default_map = create_map("default_map", 0, 2, UVM_BIG_ENDIAN, 0);
@@ -213,6 +263,12 @@ class reg_model extends uvm_reg_block;
         regfile_b.build();
         default_map.add_submap(regfile_b.default_map, 'h200);
         regfile_b.lock_model();
+
+        regfile_c = register_file_c::type_id::create("regfile_c");
+        regfile_c.configure(this, "u_reg_c");
+        regfile_c.build();
+        default_map.add_submap(regfile_c.default_map, 'h300);
+        regfile_c.lock_model();
     endfunction
 
 endclass

@@ -133,20 +133,20 @@ class reg_model extends uvm_reg_block;
         blk_invert = reg_block_invert::type_id::create("blk_invert");
         blk_invert.configure(this, ""); // TODO
         blk_invert.build();
-        blk_invert.lock_model();
         default_map.add_submap(blk_invert.default_map, 'h9); // TODO
+        blk_invert.lock_model();
 
         blk_counter_high = reg_block_counter_high::type_id::create("blk_counter_high");
         blk_counter_high.configure(this, ""); // TODO
         blk_counter_high.build();
-        blk_counter_high.lock_model();
         default_map.add_submap(blk_counter_high.default_map, 'h5); // TODO
+        blk_counter_high.lock_model();
 
         blk_counter_low = reg_block_counter_low::type_id::create("blk_counter_low");
         blk_counter_low.configure(this, ""); // TODO
         blk_counter_low.build();
-        blk_counter_low.lock_model();
         default_map.add_submap(blk_counter_low.default_map, 'h6); // TODO
+        blk_counter_low.lock_model();
     endfunction
 
 endclass
