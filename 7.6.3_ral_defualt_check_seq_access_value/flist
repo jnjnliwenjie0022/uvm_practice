@@ -1,0 +1,7 @@
+tb.sv
+dut.sv
+reg_a.sv
+reg_b.sv
+reg_c.sv
+reg_d.sv
+ram1024x16.sv
