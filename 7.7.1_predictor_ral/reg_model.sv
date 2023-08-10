@@ -63,7 +63,7 @@ class reg_block_invert extends uvm_reg_block;
 
     function new(input string name = "reg_block_invert");
         super.new(name, UVM_NO_COVERAGE);
-    endfunction 
+    endfunction
 
     rand reg_invert invert;
     virtual function void build();
@@ -82,7 +82,7 @@ class reg_block_counter_high extends uvm_reg_block;
 
     function new(input string name = "reg_block_counter_high");
         super.new(name, UVM_NO_COVERAGE);
-    endfunction 
+    endfunction
 
     rand reg_counter_high counter_high;
     virtual function void build();
@@ -101,7 +101,7 @@ class reg_block_counter_low extends uvm_reg_block;
 
     function new(input string name = "reg_block_counter_low");
         super.new(name, UVM_NO_COVERAGE);
-    endfunction 
+    endfunction
 
     rand reg_counter_low counter_low;
     virtual function void build();
@@ -121,7 +121,7 @@ class register_file_a extends uvm_reg_block;
 
     function new(input string name = "register_file_a");
         super.new(name, UVM_NO_COVERAGE);
-    endfunction 
+    endfunction
 
     rand reg_counter_high counter_high;
     rand reg_counter_low counter_low;
@@ -147,7 +147,7 @@ class register_file_b extends uvm_reg_block;
 
     function new(input string name = "register_file_b");
         super.new(name, UVM_NO_COVERAGE);
-    endfunction 
+    endfunction
 
     rand reg_counter_high counter_high;
     rand reg_counter_low counter_low;
@@ -195,7 +195,7 @@ class register_file_c extends uvm_reg_block;
 
     function new(input string name = "register_file_c");
         super.new(name, UVM_NO_COVERAGE);
-    endfunction 
+    endfunction
 
     rand register_multifield reg_multifield;
 
@@ -240,7 +240,7 @@ class register_file_d extends uvm_reg_block;
 
     function new(input string name = "register_file_d");
         super.new(name, UVM_NO_COVERAGE);
-    endfunction 
+    endfunction
 
     rand register_counter reg_counter;
 
@@ -268,13 +268,13 @@ class memory extends uvm_mem;
 
 endclass
 //}}}
-//{{{ reg_model 
+//{{{ reg_model
 class reg_model extends uvm_reg_block;
     `uvm_object_utils(reg_model)
 
     function new(input string name="reg_model");
         super.new(name, UVM_NO_COVERAGE);
-    endfunction 
+    endfunction
 
     rand reg_block_invert       blk_invert;
     rand reg_block_counter_high blk_counter_high;

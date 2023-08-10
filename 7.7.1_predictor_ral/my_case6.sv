@@ -7,11 +7,11 @@ class case0_sequence extends uvm_sequence #(my_transaction);
 
     function  new(string name= "case0_sequence");
         super.new(name);
-    endfunction 
+    endfunction
     virtual task pre_body();
         use_response_handler(1);
     endtask
-  
+
     virtual function void response_handler(uvm_sequence_item response);
        if(!$cast(rsp, response))
           `uvm_error(get_full_name(), "can't cast")
@@ -32,7 +32,7 @@ class case0_bus_seq extends uvm_sequence #(bus_transaction);
 
     function  new(string name= "case0_bus_seq");
         super.new(name);
-    endfunction 
+    endfunction
 
     virtual task body();
         // wihtout rsp, the item can simutaniously change at drv and bseq
@@ -71,11 +71,11 @@ endclass
 class case0_ral extends uvm_sequence;
     `uvm_object_utils(case0_ral)
     `uvm_declare_p_sequencer(my_vsqr)
-    
+
     function  new(string name= "case0_bus_seq");
         super.new(name);
-    endfunction 
-    
+    endfunction
+
     virtual task body();
         uvm_status_e status;
         uvm_reg_data_t value;
@@ -100,13 +100,13 @@ class case0_cfg_vseq extends uvm_sequence;
 
     function new(string name = "case0_cfg_vseq");
        super.new(name);
-    endfunction 
+    endfunction
 
     virtual task body();
         uvm_status_e   status;
         uvm_reg_data_t value;
         bit [31:0] counter;
-        if (starting_phase != null) 
+        if (starting_phase != null)
             starting_phase.raise_objection(this);
         p_sequencer.p_rm.blk_invert.invert.read(status, value, UVM_FRONTDOOR);
         `uvm_info("case0_cfg_vseq", $sformatf("invert's initial value is %0h", value), UVM_LOW)
@@ -133,7 +133,7 @@ class case0_cfg_vseq extends uvm_sequence;
         p_sequencer.p_rm.blk_counter_high.counter_high.peek(status, value);
         counter[31:16] = value[15:0];
         `uvm_info("case0_cfg_vseq", $sformatf("after poke, counter's value(BACKDOOR) is %0h", counter), UVM_LOW)
-        if (starting_phase != null) 
+        if (starting_phase != null)
             starting_phase.drop_objection(this);
     endtask
 
@@ -145,13 +145,13 @@ class case0_reg_vseq extends uvm_sequence;
 
     function new(string name = "case0_reg_vseq");
        super.new(name);
-    endfunction 
+    endfunction
 
     virtual task body();
         uvm_status_e   status;
         uvm_reg_data_t value;
         bit [31:0] counter;
-        if (starting_phase != null) 
+        if (starting_phase != null)
             starting_phase.raise_objection(this);
 
         p_sequencer.p_rm.regfile_a.counter_low.write(status, 2, UVM_FRONTDOOR);
@@ -172,7 +172,7 @@ class case0_reg_vseq extends uvm_sequence;
         p_sequencer.p_rm.regfile_b.counter_high.peek(status, value, UVM_FRONTDOOR); counter[31:16] = value[15:0];
         `uvm_info("regfile_a_vseq", $sformatf("after peek, regfile_b_counter value(BACKDOOR) is %0h", counter), UVM_LOW)
 
-        if (starting_phase != null) 
+        if (starting_phase != null)
             starting_phase.drop_objection(this);
     endtask
 
@@ -184,13 +184,13 @@ class case0_reg_multifield extends uvm_sequence;
 
     function new(string name = "case0_reg_multifield");
        super.new(name);
-    endfunction 
+    endfunction
 
     virtual task body();
         uvm_status_e   status;
         uvm_reg_data_t value;
         bit [31:0] counter;
-        if (starting_phase != null) 
+        if (starting_phase != null)
             starting_phase.raise_objection(this);
 
         p_sequencer.p_rm.regfile_c.reg_multifield.write(status, 16'b0100_010_01, UVM_FRONTDOOR);
@@ -204,7 +204,7 @@ class case0_reg_multifield extends uvm_sequence;
         p_sequencer.p_rm.regfile_c.reg_multifield.fieldC.peek(status, value, UVM_FRONTDOOR); counter = value;
         `uvm_info("regfile_c_vseq", $sformatf("after peek, regfile_c_fieldC value(BACKDOOR) is %0h", counter), UVM_LOW)
 
-        if (starting_phase != null) 
+        if (starting_phase != null)
             starting_phase.drop_objection(this);
     endtask
 
@@ -216,13 +216,13 @@ class case0_reg_multiaddr extends uvm_sequence;
 
     function new(string name = "case0_reg_multiaddr");
        super.new(name);
-    endfunction 
+    endfunction
 
     virtual task body();
         uvm_status_e   status;
         uvm_reg_data_t value;
         bit [31:0] counter;
-        if (starting_phase != null) 
+        if (starting_phase != null)
             starting_phase.raise_objection(this);
         p_sequencer.p_rm.regfile_d.reg_counter.write(status, 32'h12345678, UVM_FRONTDOOR);
         p_sequencer.p_rm.regfile_d.reg_counter.read(status, value, UVM_FRONTDOOR);
@@ -235,7 +235,7 @@ class case0_reg_multiaddr extends uvm_sequence;
         p_sequencer.p_rm.regfile_d.reg_counter.peek(status, value, UVM_FRONTDOOR);
         `uvm_info("case0_reg_multiaddr", $sformatf("regfile_d counter value is %0h", value), UVM_LOW)
 
-        if (starting_phase != null) 
+        if (starting_phase != null)
             starting_phase.drop_objection(this);
     endtask
 
@@ -247,12 +247,12 @@ class case0_mem_vseq extends uvm_sequence;
 
     function new(string name = "case0_mem_vseq");
        super.new(name);
-    endfunction 
+    endfunction
 
     virtual task body();
         uvm_status_e   status;
         uvm_reg_data_t value;
-        if (starting_phase != null) 
+        if (starting_phase != null)
             starting_phase.raise_objection(this);
         p_sequencer.p_rm.mm.write(status, 0, 16'h0);
         p_sequencer.p_rm.mm.write(status, 1, 16'h1);
@@ -332,7 +332,7 @@ class case0_mem_vseq extends uvm_sequence;
         p_sequencer.p_rm.mm.peek(status, 8, value);
         `uvm_info("case0_mem_vseq", $sformatf("mem peek value is %0h", value), UVM_LOW)
 
-        if (starting_phase != null) 
+        if (starting_phase != null)
             starting_phase.drop_objection(this);
     endtask
 
@@ -344,13 +344,13 @@ class case0_access_vseq extends uvm_sequence;
 
     function new(string name = "case0_access_vseq");
        super.new(name);
-    endfunction 
+    endfunction
 
     virtual task body();
         uvm_status_e   status;
         uvm_reg_data_t value;
         bit [31:0] counter;
-        if (starting_phase != null) 
+        if (starting_phase != null)
             starting_phase.raise_objection(this);
 
         p_sequencer.p_rm.regfile_d.reg_counter.set(32'h11111111);
@@ -402,7 +402,7 @@ class case0_access_vseq extends uvm_sequence;
         value = p_sequencer.p_rm.regfile_d.reg_counter.get_mirrored_value();
         `uvm_info("case0_reg_multiaddr", $sformatf("mirrored value is %0h", value), UVM_LOW)
 
-        if (starting_phase != null) 
+        if (starting_phase != null)
             starting_phase.drop_objection(this);
     endtask
 
@@ -468,7 +468,7 @@ endclass
 
 class case0_vseq extends uvm_sequence;
     `uvm_object_utils(case0_vseq)
-    `uvm_declare_p_sequencer(my_vsqr) 
+    `uvm_declare_p_sequencer(my_vsqr)
     function new(string name = "case0_vseq");
         super.new(name);
     endfunction
@@ -482,10 +482,10 @@ class case0_vseq extends uvm_sequence;
         case0_reg_multifield reg_multifield;
         case0_reg_multiaddr reg_multiaddr;
         case0_mem_vseq mem_vseq;
-        
+
         case0_access_vseq access_vseq;
         case0_check_access_vseq check_access_vseq;
-        if(starting_phase != null) 
+        if(starting_phase != null)
             starting_phase.raise_objection(this);
 
         `uvm_info(get_full_name(), "in vseq body", UVM_LOW)
@@ -519,7 +519,7 @@ class case0_vseq extends uvm_sequence;
         //rseq.start(p_sequencer);
         //dseq.start(p_sequencer.p_my_sqr);
 
-        if(starting_phase != null) 
+        if(starting_phase != null)
             starting_phase.drop_objection(this);
     endtask
 endclass
@@ -529,12 +529,12 @@ class my_case6 extends base_test;
 
     function new(string name = "my_case6", uvm_component parent = null);
         super.new(name,parent);
-    endfunction 
+    endfunction
 
     case0_vseq cvseq;
     case0_check_hdl_path_vseq check_hdl_path_vseq;
 
-    extern virtual function void build_phase(uvm_phase phase); 
+    extern virtual function void build_phase(uvm_phase phase);
     //extern virtual function void end_of_elaboration_phase(uvm_phase phase);
     extern virtual task run_phase(uvm_phase phase);
 
@@ -549,7 +549,7 @@ function void my_case6::build_phase(uvm_phase phase);
 endfunction
 
 //function void end_of_elaboration_phase (uvm_phase phase);
-//    uvm_top.print_topology(); 
+//    uvm_top.print_topology();
 //endfunction
 
 task my_case6::run_phase(uvm_phase phase);
@@ -562,6 +562,6 @@ task my_case6::run_phase(uvm_phase phase);
     cvseq.start(v_sqr, null);
 
     phase.drop_objection(this);
-    
+
 endtask
 `endif
