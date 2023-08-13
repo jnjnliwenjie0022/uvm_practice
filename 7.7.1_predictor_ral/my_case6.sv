@@ -490,32 +490,32 @@ class case0_vseq extends uvm_sequence;
 
         `uvm_info(get_full_name(), "in vseq body", UVM_LOW)
         #10000;
-        access_vseq = case0_access_vseq::type_id::create("access_vseq");
-        check_access_vseq = case0_check_access_vseq::type_id::create("check_access_vseq");
+        //access_vseq = case0_access_vseq::type_id::create("access_vseq");
+        //check_access_vseq = case0_check_access_vseq::type_id::create("check_access_vseq");
 
-        check_access_vseq.start(p_sequencer);
-        access_vseq.start(p_sequencer);
-
-        #10000;
-        cseq = case0_cfg_vseq::type_id::create("cseq");
-        reg_vseq = case0_reg_vseq::type_id::create("reg_vseq");
-        reg_multifield = case0_reg_multifield::type_id::create("reg_multifield");
-        reg_multiaddr = case0_reg_multiaddr::type_id::create("reg_multiaddr");
-        mem_vseq = case0_mem_vseq::type_id::create("mem_vseq");
-
-        cseq.start(p_sequencer);
-        reg_vseq.start(p_sequencer);
-        reg_multifield.start(p_sequencer);
-        reg_multiaddr.start(p_sequencer);
-        mem_vseq.start(p_sequencer);
+        //check_access_vseq.start(p_sequencer);
+        //access_vseq.start(p_sequencer);
 
         #10000;
-        //bseq = case0_bus_seq::type_id::create("bseq");
+        //cseq = case0_cfg_vseq::type_id::create("cseq");
+        //reg_vseq = case0_reg_vseq::type_id::create("reg_vseq");
+        //reg_multifield = case0_reg_multifield::type_id::create("reg_multifield");
+        //reg_multiaddr = case0_reg_multiaddr::type_id::create("reg_multiaddr");
+        //mem_vseq = case0_mem_vseq::type_id::create("mem_vseq");
+
+        //cseq.start(p_sequencer);
+        //reg_vseq.start(p_sequencer);
+        //reg_multifield.start(p_sequencer);
+        //reg_multiaddr.start(p_sequencer);
+        //mem_vseq.start(p_sequencer);
+
+        #10000;
+        bseq = case0_bus_seq::type_id::create("bseq");
         //rseq = case0_ral::type_id::create("rseq");
         //dseq = case0_sequence::type_id::create("dseq");
 
 
-        //bseq.start(p_sequencer.p_bus_sqr);
+        bseq.start(p_sequencer.p_bus_sqr);
         //rseq.start(p_sequencer);
         //dseq.start(p_sequencer.p_my_sqr);
 
@@ -545,6 +545,11 @@ function void my_case6::build_phase(uvm_phase phase);
 
     cvseq = case0_vseq::type_id::create("cvseq");
     check_hdl_path_vseq = case0_check_hdl_path_vseq::type_id::create("check_hdl_path_vseq");
+
+    //uvm_config_db#(uvm_object_wrapper)::set(this,
+    //                                       "v_sqr.run_phase",
+    //                                       "default_sequence",
+    //                                       case0_vseq::type_id::get());
 
 endfunction
 

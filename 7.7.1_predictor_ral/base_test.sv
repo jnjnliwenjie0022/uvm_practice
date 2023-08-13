@@ -28,8 +28,8 @@ endclass
 function void base_test::build_phase(uvm_phase phase);
    super.build_phase(phase);
 
-    env  =  my_env::type_id::create("env", this); 
-    v_sqr =  my_vsqr::type_id::create("v_sqr", this); 
+    env  =  my_env::type_id::create("env", this);
+    v_sqr =  my_vsqr::type_id::create("v_sqr", this);
 
     rm = reg_model::type_id::create("rm", this);
     rm.configure(null, "");
