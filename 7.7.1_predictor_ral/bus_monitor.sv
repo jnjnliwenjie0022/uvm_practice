@@ -32,7 +32,6 @@ task bus_monitor::run_phase(uvm_phase phase);
 endtask
 
 task bus_monitor::collect_one_pkt(bus_transaction tr);
-    //@(posedge vif.clk iff (vif.bus_cmd_valid));
 
     while(1) begin
         @(posedge vif.clk);
