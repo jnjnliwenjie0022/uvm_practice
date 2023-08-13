@@ -5,7 +5,7 @@ class bus_monitor extends uvm_monitor;
    virtual bus_if vif;
 
    uvm_analysis_port #(bus_transaction)  ap;
-   
+
    `uvm_component_utils(bus_monitor)
    function new(string name = "bus_monitor", uvm_component parent = null);
       super.new(name, parent);
@@ -18,11 +18,11 @@ class bus_monitor extends uvm_monitor;
       ap = new("ap", this);
    endfunction
 
-   extern task main_phase(uvm_phase phase);
+   extern task run_phase(uvm_phase phase);
    extern task collect_one_pkt(bus_transaction tr);
 endclass
 
-task bus_monitor::main_phase(uvm_phase phase);
+task bus_monitor::run_phase(uvm_phase phase);
    bus_transaction tr;
    while(1) begin
       tr = new("tr");
@@ -32,7 +32,7 @@ task bus_monitor::main_phase(uvm_phase phase);
 endtask
 
 task bus_monitor::collect_one_pkt(bus_transaction tr);
-   
+
    while(1) begin
       @(posedge vif.clk);
       if(vif.bus_cmd_valid) break;
